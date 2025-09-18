@@ -6,18 +6,33 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  const result = {};
-  const array = sourceString.split(';');
+  const cssStyles = {};
+  const stringValues = sourceString.split(';');
 
-  array.forEach((row) => {
-    const parts = row.split(':');
+  stringValues.forEach((row) => {
+    const trimmedRow = row.trim();
 
-    if (parts.length === 2) {
-      result[parts[0].trim()] = parts[1].trim();
+    if (!trimmedRow) {
+      return;
     }
+
+    const colonIndex = trimmedRow.indexOf(':');
+
+    if (colonIndex === -1) {
+      return;
+    }
+
+    const propertyName = trimmedRow.slice(0, colonIndex).trim();
+    const propertyValue = trimmedRow.slice(colonIndex + 1).trim();
+
+    if (!propertyName) {
+      return;
+    }
+
+    cssStyles[propertyName] = propertyValue;
   });
 
-  return result;
+  return cssStyles;
 }
 
 module.exports = convertToObject;
